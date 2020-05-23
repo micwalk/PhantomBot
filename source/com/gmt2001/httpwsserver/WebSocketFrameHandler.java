@@ -196,7 +196,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
      */
     public static void broadcastWsFrame(WebSocketFrame resframe) {
         WS_SESSIONS.forEach((c) -> {
-            if (c.attr(WsAuthenticationHandler.ATTR_AUTHENTICATED).get()) {
+            Boolean isAuth = c.attr(WsAuthenticationHandler.ATTR_AUTHENTICATED).get();
+            if (isAuth != null && isAuth) {
                 c.writeAndFlush(resframe.copy());
             }
         });
@@ -210,7 +211,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
      */
     public static void broadcastWsFrame(String uri, WebSocketFrame resframe) {
         WS_SESSIONS.forEach((c) -> {
-            if (c.attr(WsAuthenticationHandler.ATTR_AUTHENTICATED).get() && c.attr(ATTR_URI).get().equals(uri)) {
+            Boolean isAuth = c.attr(WsAuthenticationHandler.ATTR_AUTHENTICATED).get();
+            if (isAuth != null && isAuth && c.attr(ATTR_URI).get().equals(uri)) {
                 c.writeAndFlush(resframe.copy());
             }
         });
